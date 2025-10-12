@@ -7,9 +7,7 @@ import org.daw.model.AnimeListResponse;
 import org.daw.model.AnimeResponse;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

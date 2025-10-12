@@ -1,7 +1,6 @@
 package org.daw;
 
 import org.daw.model.Anime;
-import org.daw.model.AnimeListResponse;
 import org.daw.service.ApiService;
 
 import java.io.IOException;
