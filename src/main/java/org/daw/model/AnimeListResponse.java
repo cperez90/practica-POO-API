@@ -9,6 +9,6 @@ import java.util.List;
 @Setter
 public class AnimeListResponse {
 
-    private List<Pagination> pagination;
+    private Pagination pagination;
     private List<Anime> data;
 }
