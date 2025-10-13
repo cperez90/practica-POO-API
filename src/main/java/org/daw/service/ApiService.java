@@ -2,11 +2,14 @@ package org.daw.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.daw.model.Anime;
-import org.daw.model.AnimeListResponse;
-import org.daw.model.AnimeResponse;
+import org.daw.model.ListResponse;
+import org.daw.model.SingleResponse;
+import org.daw.model.MediaItem;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApiService {
-    private static final URI BaseURL = URI.create("https://api.jikan.moe/v4/anime");
+    private static final URI BaseURL = URI.create("https://api.jikan.moe/v4/");
     private final HttpClient httpClient;
     private final Gson gson;
 
@@ -28,12 +31,13 @@ public class ApiService {
         this.gson = gson;
     }
 
-    public AnimeListResponse getAnimeList(int page) throws IOException, InterruptedException {
-        URI apiURI = URI.create(BaseURL + "?page=" + page);
+    public <T extends MediaItem> ListResponse<T> getList(String endpoint,int page, Class<T> typeClass) throws IOException, InterruptedException {
+        URI apiURI = URI.create(BaseURL + endpoint + "?page=" + page);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
-        return gson.fromJson(response.body(), AnimeListResponse.class);
+        Type responseType = TypeToken.getParameterized(ListResponse.class, typeClass).getType();
+        return gson.fromJson(response.body(), responseType);
     }
 
     public List<String> getAllAnimeTitle() throws IOException, InterruptedException {
@@ -43,7 +47,7 @@ public class ApiService {
 
         while (hasNextPage) {
             System.out.println("Page " + page);
-            AnimeListResponse response = getAnimeList(page);
+            ListResponse<Anime> response = getList("anime",page, Anime.class);
             for (Anime anime : response.getData()){
                 titles.add(anime.getTitle());
             }
@@ -58,14 +62,16 @@ public class ApiService {
         return titles;
     }
 
-    public Anime getAnimeById(int id) throws InterruptedException, IOException {
-        URI apiURI = URI.create(BaseURL + "/" + id);
+    public <T extends MediaItem> T getById(String endpoint,int id, Class<T> typeClass) throws InterruptedException, IOException {
+        URI apiURI = URI.create(BaseURL + endpoint + "/" + id);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
 
-        AnimeResponse animeResponse = gson.fromJson(response.body(), AnimeResponse.class);
-        return animeResponse.getData();
+        String body = response.body();
+        Type responseType = TypeToken.getParameterized(SingleResponse.class, typeClass).getType();
+        SingleResponse<T> singleResponse = gson.fromJson(body, responseType);
+        return singleResponse.getData();
     }
 
     private void ensureSuccess(HttpResponse<?> response, String url) {

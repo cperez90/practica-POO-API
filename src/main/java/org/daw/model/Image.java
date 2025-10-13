@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AnimeResponse {
-    private Anime data;
+public class Image {
+    private ImageFormat jpg;
+    private ImageFormat webp;
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AnimeListResponse {
+public class ListResponse<T extends MediaItem> {
 
     private Pagination pagination;
-    private List<Anime> data;
+    private List<T> data;
 }
