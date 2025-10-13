@@ -3,7 +3,6 @@ package org.daw.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.daw.model.Anime;
 import org.daw.model.ListResponse;
 import org.daw.model.SingleResponse;
 import org.daw.model.MediaItem;
@@ -31,7 +30,7 @@ public class ApiService {
         this.gson = gson;
     }
 
-    public <T extends MediaItem> ListResponse<T> getList(String endpoint,int page, Class<T> typeClass) throws IOException, InterruptedException {
+    public <T extends MediaItem> ListResponse<T> getListPage(String endpoint, int page, Class<T> typeClass) throws IOException, InterruptedException {
         URI apiURI = URI.create(BASE_URL + endpoint + "?page=" + page);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -40,26 +39,22 @@ public class ApiService {
         return gson.fromJson(response.body(), responseType);
     }
 
-    public List<String> getAllAnimeTitle() throws IOException, InterruptedException {
-        List<String> titles = new ArrayList<>();
+    public <T extends MediaItem> List<T> getListAllItems(String endpoint, int maxPage , Class<T> typeClass) throws IOException, InterruptedException {
+        List<T> items = new ArrayList<>();
         int page = 1;
         boolean hasNextPage = true;
 
         while (hasNextPage) {
-            System.out.println("Page " + page);
-            ListResponse<Anime> response = getList("anime",page, Anime.class);
-            for (Anime anime : response.getData()){
-                titles.add(anime.getDisplayName());
-            }
-            if (page >= 2) {
-                System.out.println("limite de 2 paginas");
+            ListResponse<T> response = getListPage(endpoint,page, typeClass);
+            items.addAll(response.getData());
+            if (page == maxPage) {
                 break;
             }
             hasNextPage = response.getPagination().isHas_next_page();
             page++;
-            Thread.sleep(410);
+            Thread.sleep(610);
         }
-        return titles;
+        return items;
     }
 
     public <T extends MediaItem> T getById(String endpoint,int id, Class<T> typeClass) throws InterruptedException, IOException {
