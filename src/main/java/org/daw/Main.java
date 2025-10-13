@@ -16,7 +16,7 @@ public class Main {
         }
         System.out.println("Buscando anime por id.");
         Anime anime = api.getById("anime",1, Anime.class);
-        System.out.println("Titulo: " + anime.getTitle());
+        System.out.println("Titulo: " + anime.getDisplayName());
         System.out.println("Puntuacion: " + anime.getPopularity());
     }
 }

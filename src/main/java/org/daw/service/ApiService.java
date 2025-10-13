@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApiService {
-    private static final URI BaseURL = URI.create("https://api.jikan.moe/v4/");
+    private static final URI BASE_URL = URI.create("https://api.jikan.moe/v4/");
     private final HttpClient httpClient;
     private final Gson gson;
 
@@ -32,7 +32,7 @@ public class ApiService {
     }
 
     public <T extends MediaItem> ListResponse<T> getList(String endpoint,int page, Class<T> typeClass) throws IOException, InterruptedException {
-        URI apiURI = URI.create(BaseURL + endpoint + "?page=" + page);
+        URI apiURI = URI.create(BASE_URL + endpoint + "?page=" + page);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
@@ -49,7 +49,7 @@ public class ApiService {
             System.out.println("Page " + page);
             ListResponse<Anime> response = getList("anime",page, Anime.class);
             for (Anime anime : response.getData()){
-                titles.add(anime.getTitle());
+                titles.add(anime.getDisplayName());
             }
             if (page >= 2) {
                 System.out.println("limite de 2 paginas");
@@ -63,7 +63,7 @@ public class ApiService {
     }
 
     public <T extends MediaItem> T getById(String endpoint,int id, Class<T> typeClass) throws InterruptedException, IOException {
-        URI apiURI = URI.create(BaseURL + endpoint + "/" + id);
+        URI apiURI = URI.create(BASE_URL + endpoint + "/" + id);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
