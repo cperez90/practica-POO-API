@@ -1,35 +1,60 @@
 package org.daw;
-
 import org.daw.model.Anime;
-import org.daw.service.ApiService;
-import org.daw.service.MediaService;
+import org.daw.model.Character;
+import org.daw.model.Manga;
+import org.daw.view.ApiView;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        ApiService api = new ApiService();
-        MediaService mediaService = new MediaService();
-        List<Anime> animes = api.getListAllItems("anime",3,Anime.class);
-        for(Anime a : animes){
-            System.out.println("ID: " + a.getMalId() + ", Name: " + a.getDisplayName() + ",Score " + a.getScore());
-        }
-        List<Anime> filteredAnimes = mediaService.filterByNameContains(animes, "naruto");
-        filteredAnimes.forEach(a -> System.out.println("ID: " + a.getMalId() + " -> " + a.getDisplayName() + " -> " + a.getScore()));
-        List<Anime> filteredPredicate = mediaService.filterByPredicate(animes,a -> a.getYear() > 1990 && a.getYear() < 2000);
-        System.out.println("Filtrado con el predicate en parametro: ");
-        for(Anime a : filteredPredicate){
-            System.out.println("ID: " + a.getMalId() + " -> " + a.getDisplayName() + " -> " + a.getScore());
-        }
-        System.out.println("Total de animes: " + filteredPredicate.size());
-        Optional<Anime> topAnime = mediaService.getHighestScore(animes);
-        System.out.println("Top Anime:");
-        topAnime.ifPresent(anime -> System.out.println("ID: " + anime.getMalId() + " -> " + anime.getDisplayName() + " -> " + anime.getScore()));
-        System.out.println("Buscando anime por id.");
-        Anime anime = api.getByItemId("anime",20, Anime.class);
-        System.out.println("Titulo: " + anime.getDisplayName());
-        System.out.println("Puntuacion: " + anime.getScore());
+
+        ApiView apiView = new ApiView();
+        //System.out.println("Lista de nombres:");
+        //Los parametros el primero para elegir la lista de entre anime, manga y personajes, y segundo para el limite de paginas para sacar los datos
+        //Los endpoint pueden ser todo anime, manga o characters
+        apiView.showItemsNames("anime",1);
+
+        //Los parametros serian todo anime o manga y el segundo un id
+        apiView.showItemsCharacters("manga",20);
+
+        //Los parametros el primero para elegir la lista de entre anime, manga y personajes, y segundo para el limite de paginas para sacar los datos
+        //Los endpoint pueden ser todo anime, manga o characters
+        //Ordena por nombre
+        apiView.showItemsNameSortByName("characters",1);
+
+        //Los parametros el primero para elegir la lista de entre anime y manga, y segundo para el limite de paginas para sacar los datos
+        //Los endpoint pueden ser todo anime, manga o characters
+        //Ordena por score
+        apiView.showItemsNameSortByScore("manga",1);
+
+        //Los parametros el primero para elegir la lista de entre anime, manga y personajes, y segundo para el limite de paginas para sacar los datos
+        //el tercer paramatro es para filtrar por pablabra o letra
+        //Los endpoint pueden ser todo anime, manga o characters
+        apiView.showItemsFilterName("anime",1,"cow");
+
+        //Los parametros el primero para elegir la lista de entre anime o manga, y segundo para el limite de paginas para sacar los datos
+        //el tercero para filtrar por palabra o letra y el cuarto es para poner el score minimo para que filtre por el
+        //Los endpoint pueden ser todo anime o manga
+        //filtra por palabra o letra y por el score minimo
+        apiView.showItemsFilterNameAndScore("anime",1,"cow",1);
+
+        //Los parametros el primero para elegir la lista de entre anime o manga, y segundo para el limite de paginas para sacar los datos
+        //el tercero para poner el score minimo para que filtre por el
+        //Los endpoint pueden ser todo anime o manga
+        //filtra por el score minimo que le das por parametro
+        apiView.showItemsHighScoreNames("anime",1,8.4);
+
+        //El parametro es para el limite de paginas para sacar los datos
+        //te da el anime y el manga con mejor score de la lista data
+        apiView.showItemHighestScoreName(2);
+
+
+        //Los parametros el primero para elegir la lista de entre anime, manga y personajes, y segundo para el limite de paginas para sacar los datos
+        //el tercero es una condicion de filtro que te puedes poner tu pero ojo que hay que castear para poder usar los metodos
+        //Los endpoint pueden ser todo anime, manga o characters
+        apiView.showItemsFilterPredicate("manga",1,manga -> ((Manga) manga).getPublishing() == false);
+
+
     }
 }

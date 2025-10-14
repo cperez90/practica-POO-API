@@ -3,9 +3,7 @@ package org.daw.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.daw.model.ListResponse;
-import org.daw.model.SingleResponse;
-import org.daw.model.MediaItem;
+import org.daw.model.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -52,13 +50,13 @@ public class ApiService {
             }
             hasNextPage = response.getPagination().isHas_next_page();
             page++;
-            Thread.sleep(610);
+            Thread.sleep(1090);
         }
         return items;
     }
 
     public <T extends MediaItem> T getByItemId(String endpoint, int id, Class<T> typeClass) throws InterruptedException, IOException {
-        URI apiURI = URI.create(BASE_URL + endpoint + "/" + id);
+        URI apiURI = URI.create(BASE_URL + endpoint + "/" + id + "/full");
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
@@ -69,15 +67,16 @@ public class ApiService {
         return singleResponse.getData();
     }
 
-    public <T extends MediaItem> List<T> getCharactersByItemId (String endpoint, int id, Class<T> typeClass) throws InterruptedException, IOException {
+    public List<CharacterItems> getCharactersByItemId (String endpoint, int id) throws InterruptedException, IOException {
         URI apiURI = URI.create(BASE_URL + endpoint + "/" + id + "/characters");
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
 
         String body = response.body();
-        Type responseType = TypeToken.getParameterized(ListResponse.class, typeClass).getType();
-        return gson.fromJson(body, responseType);
+        Type responseType = new  TypeToken<ListCharactersItemsResponse>() {}.getType();
+        ListCharactersItemsResponse listCharactersItemsResponse = gson.fromJson(body, responseType);
+        return listCharactersItemsResponse.getData();
     }
 
     private void ensureSuccess(HttpResponse<?> response, String url) {

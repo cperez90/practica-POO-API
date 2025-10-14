@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SingleResponse <T> {
-    private T data;
+public class VoiceActor {
+    private Person person;
+    private String language;
 }

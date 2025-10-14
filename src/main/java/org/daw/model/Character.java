@@ -17,6 +17,9 @@ public class Character extends MediaItem {
     private List<String> nicknames;
     private int favorites;
     private String about;
+    private List<MediaCharactersRelation> anime;
+    private List<MediaCharactersRelation> manga;
+    private List<VoiceActor> voices;
 
 
     @Override

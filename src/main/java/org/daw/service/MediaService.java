@@ -46,7 +46,7 @@ public class MediaService {
         return items.stream().filter(i -> i.getScore() >= minScore).map(MediaContent::getDisplayName).collect(Collectors.toList());
     }
 
-    public <T extends MediaContent> Optional<T> getHighestScore(List<T> items) {
+    public <T extends MediaContent> Optional<T> getHighestScoreName(List<T> items) {
         return items.stream().max(Comparator.comparingDouble(T::getScore));
     }
 }
