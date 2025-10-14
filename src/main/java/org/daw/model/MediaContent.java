@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MediaContent extends MediaItem {
+public class MediaContent extends MediaItem{
     @Getter(AccessLevel.NONE)
     private String title;
     private String title_english;
@@ -31,5 +31,16 @@ public class MediaContent extends MediaItem {
     @Override
     public String getDisplayName() {
         return title;
+    }
+
+    @Override
+    public int compareTo(MediaItem o) {
+        int nameComparator = this.getDisplayName().compareTo(o.getDisplayName());
+        if (nameComparator != 0) {
+            return nameComparator;
+        }else {
+            MediaContent other = (MediaContent) o;
+            return this.genres.getFirst().getType().compareTo(other.genres.getFirst().getType());
+        }
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Character extends MediaItem{
+public class Character extends MediaItem {
     @Getter(AccessLevel.NONE)
     private String name;
     @SerializedName("name_kanji")

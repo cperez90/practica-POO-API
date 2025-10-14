@@ -30,7 +30,7 @@ public class ApiService {
         this.gson = gson;
     }
 
-    public <T extends MediaItem> ListResponse<T> getListPage(String endpoint, int page, Class<T> typeClass) throws IOException, InterruptedException {
+    public <T extends MediaItem> ListResponse<T> getItemsListPage(String endpoint, int page, Class<T> typeClass) throws IOException, InterruptedException {
         URI apiURI = URI.create(BASE_URL + endpoint + "?page=" + page);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -45,7 +45,7 @@ public class ApiService {
         boolean hasNextPage = true;
 
         while (hasNextPage) {
-            ListResponse<T> response = getListPage(endpoint,page, typeClass);
+            ListResponse<T> response = getItemsListPage(endpoint,page, typeClass);
             items.addAll(response.getData());
             if (page == maxPage) {
                 break;
@@ -57,7 +57,7 @@ public class ApiService {
         return items;
     }
 
-    public <T extends MediaItem> T getById(String endpoint,int id, Class<T> typeClass) throws InterruptedException, IOException {
+    public <T extends MediaItem> T getByItemId(String endpoint, int id, Class<T> typeClass) throws InterruptedException, IOException {
         URI apiURI = URI.create(BASE_URL + endpoint + "/" + id);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -67,6 +67,17 @@ public class ApiService {
         Type responseType = TypeToken.getParameterized(SingleResponse.class, typeClass).getType();
         SingleResponse<T> singleResponse = gson.fromJson(body, responseType);
         return singleResponse.getData();
+    }
+
+    public <T extends MediaItem> List<T> getCharactersByItemId (String endpoint, int id, Class<T> typeClass) throws InterruptedException, IOException {
+        URI apiURI = URI.create(BASE_URL + endpoint + "/" + id + "/characters");
+        HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        ensureSuccess(response, apiURI.toString());
+
+        String body = response.body();
+        Type responseType = TypeToken.getParameterized(ListResponse.class, typeClass).getType();
+        return gson.fromJson(body, responseType);
     }
 
     private void ensureSuccess(HttpResponse<?> response, String url) {
