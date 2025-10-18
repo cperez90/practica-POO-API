@@ -12,7 +12,7 @@ public class Main {
         ApiView apiView = new ApiView();
         ApiService apiService = new ApiService();
 
-        apiView.showItem("characters",6,"Naruto");
+        apiView.showItem("manga",30,"flcl");
 
         /*
         //System.out.println("Lista de nombres:");

@@ -66,7 +66,12 @@ public class ApiService {
         String body = response.body();
         Type responseType = TypeToken.getParameterized(SingleResponse.class, typeObject(endpoint)).getType();
         SingleResponse<T> singleResponse = gson.fromJson(body, responseType);
-        return singleResponse.getData();
+        T item = singleResponse.getData();
+        if (item instanceof MediaContent mediaContent) {
+            List<CharacterItems> characters = getCharactersByItemId(endpoint,item.getMalId());
+            mediaContent.setCharacters(characters);
+        }
+        return item;
     }
 
     public List<CharacterItems> getCharactersByItemId (String endpoint, int id) throws InterruptedException, IOException {

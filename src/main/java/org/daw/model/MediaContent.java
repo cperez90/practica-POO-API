@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.xml.stream.events.Characters;
 import java.util.List;
 
 @Getter
@@ -29,6 +30,7 @@ public class MediaContent extends MediaItem{
     private String popularity;
     private int favorites;
     private List<Genres> genres;
+    private List<CharacterItems> characters;
 
     @Override
     public String getDisplayName() {
