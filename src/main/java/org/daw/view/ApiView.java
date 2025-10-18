@@ -155,6 +155,7 @@ public class ApiView {
         Thread.sleep(710);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends MediaItem> void showItemsFilterPredicate(String endpoint, int page, Predicate<T> predicate) throws IOException, InterruptedException {
         System.out.println("Filtering by predicate:");
         switch (endpoint.toLowerCase()) {
@@ -236,22 +237,22 @@ public class ApiView {
         List<Anime> animes = apiService.getListAllItems("anime", page, Anime.class);
         Optional<Anime> anime = mediaService.getHighestScoreName(animes);
         anime.ifPresent(value -> System.out.println(value.getDisplayName()));
-        Thread.sleep(310);
+        Thread.sleep(410);
         System.out.println("highest score Manga name:");
         List<Manga> mangas = apiService.getListAllItems("manga", page, Manga.class);
         Optional<Manga> manga = mediaService.getHighestScoreName(mangas);
         manga.ifPresent(value -> System.out.println(value.getDisplayName()));
-        Thread.sleep(310);
+        Thread.sleep(410);
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
     }
 
-    public <T extends MediaContent> void ShowComparison(T item1,T item2) throws  IOException, InterruptedException {
+    public <T extends MediaContent> void ShowComparison(T item1,T item2) throws InterruptedException {
         boolean equal = mediaService.areContentsEqual(item1,item2);
         System.out.println("Comparing:");
-        System.out.println("Item 1: Name ->" + item1.getDisplayName() + " tipe -> " + item1.getType());
-        System.out.println("Item 2: Name ->" + item2.getDisplayName() + " tipe -> " + item2.getType());
+        System.out.println("Item 1: Name ->" + item1.getDisplayName() + " type -> " + item1.getType());
+        System.out.println("Item 2: Name ->" + item2.getDisplayName() + " type -> " + item2.getType());
         System.out.println("Are contents equal? " + equal);
 
         System.out.println("----------------------------------------------------");

@@ -62,7 +62,7 @@ public class ApiService {
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
-        Class<T> typeClass = null;
+        Class<T> typeClass;
         if ("anime".equalsIgnoreCase(endpoint)) {
             typeClass = (Class<T>) Anime.class;
         } else if ("manga".equalsIgnoreCase(endpoint)) {
