@@ -51,23 +51,29 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 List<Anime> animes = apiService.getListAllItems(endpoint, page);
+                Thread.sleep(410);
                 Anime anime = mediaService.getItemByName(animes,name);
+                Anime animeFull = apiService.getByItemId(endpoint,anime.getMalId());
                 SingleResponse<Anime> singleResponse = new SingleResponse<>();
-                singleResponse.setData(anime);
+                singleResponse.setData(animeFull);
                 System.out.println(singleResponse.getData());
             }
             case "manga" -> {
                 List<Manga> mangas = apiService.getListAllItems(endpoint, page);
+                Thread.sleep(410);
                 Manga manga = mediaService.getItemByName(mangas,name);
+                Manga mangaFull = apiService.getByItemId(endpoint,manga.getMalId());
                 SingleResponse<Manga> singleResponse = new SingleResponse<>();
-                singleResponse.setData(manga);
+                singleResponse.setData(mangaFull);
                 System.out.println(singleResponse.getData());
             }
             case "characters" -> {
                 List<Character> characters = apiService.getListAllItems(endpoint, page);
+                Thread.sleep(410);
                 Character character = mediaService.getItemByName(characters,name);
+                Character characterFull = apiService.getByItemId(endpoint,character.getMalId());
                 SingleResponse<Character> singleResponse = new SingleResponse<>();
-                singleResponse.setData(character);
+                singleResponse.setData(characterFull);
                 System.out.println(singleResponse.getData());
 
             }
