@@ -23,21 +23,53 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names:");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<String> names = mediaService.getNames(animes);
                 names.forEach(System.out::println);
             }
             case "manga" -> {
                 System.out.println("Mangas Names:");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<String> names = mediaService.getNames(mangas);
                 names.forEach(System.out::println);
             }
             case "characters" -> {
                 System.out.println("Characters Names:");
-                List<Character> characters = apiService.getListAllItems(endpoint, page, Character.class);
+                List<Character> characters = apiService.getListAllItems(endpoint, page);
                 List<String> names = mediaService.getNames(characters);
                 names.forEach(System.out::println);
+            }
+            default -> System.out.println("Unknown endpoint: " + endpoint);
+        }
+
+        System.out.println("----------------------------------------------------");
+        System.out.println("----------------------------------------------------");
+        Thread.sleep(710);
+    }
+
+    public void showItem(String endpoint,int page,String name) throws IOException, InterruptedException {
+        switch (endpoint.toLowerCase()) {
+            case "anime" -> {
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
+                Anime anime = mediaService.getItemByName(animes,name);
+                SingleResponse<Anime> singleResponse = new SingleResponse<>();
+                singleResponse.setData(anime);
+                System.out.println(singleResponse.getData());
+            }
+            case "manga" -> {
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
+                Manga manga = mediaService.getItemByName(mangas,name);
+                SingleResponse<Manga> singleResponse = new SingleResponse<>();
+                singleResponse.setData(manga);
+                System.out.println(singleResponse.getData());
+            }
+            case "characters" -> {
+                List<Character> characters = apiService.getListAllItems(endpoint, page);
+                Character character = mediaService.getItemByName(characters,name);
+                SingleResponse<Character> singleResponse = new SingleResponse<>();
+                singleResponse.setData(character);
+                System.out.println(singleResponse.getData());
+
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
@@ -52,19 +84,19 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names:");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<Anime> listSort = mediaService.sortByName(animes);
                 listSort.forEach(a -> System.out.println(a.getDisplayName()));
             }
             case "manga" -> {
                 System.out.println("Mangas Names:");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<Manga> listSort = mediaService.sortByName(mangas);
                 listSort.forEach(a -> System.out.println(a.getDisplayName()));
             }
             case "characters" -> {
                 System.out.println("Characters Names:");
-                List<Character> characters = apiService.getListAllItems(endpoint, page, Character.class);
+                List<Character> characters = apiService.getListAllItems(endpoint, page);
                 List<Character> listSort = mediaService.sortByName(characters);
                 listSort.forEach(a -> System.out.println(a.getDisplayName()));
             }
@@ -81,13 +113,13 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names sorting by score: ");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<Anime> listSort = mediaService.sortByScoreThenName(animes);
                 listSort.forEach(a -> System.out.println(a.getDisplayName() + " -> " + a.getScore()));
             }
             case "manga" -> {
                 System.out.println("Mangas Names sorting by score: ");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<Manga> listSort = mediaService.sortByScoreThenName(mangas);
                 listSort.forEach(m -> System.out.println(m.getDisplayName() + " -> " + m.getScore()));
             }
@@ -104,21 +136,21 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names contain " + name + ":");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<Anime> animesFilter = mediaService.filterByNameContains(animes, name);
                 List<String> names = mediaService.getNames(animesFilter);
                 names.forEach(System.out::println);
             }
             case "manga" -> {
                 System.out.println("Mangas Names contain " + name + ":");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<Manga> mangasFilter = mediaService.filterByNameContains(mangas, name);
                 List<String> names = mediaService.getNames(mangasFilter);
                 names.forEach(System.out::println);
             }
             case "characters" -> {
                 System.out.println("Characters Names contain " + name + ":");
-                List<Character> characters = apiService.getListAllItems(endpoint, page, Character.class);
+                List<Character> characters = apiService.getListAllItems(endpoint, page);
                 List<Character> charactersFilter = mediaService.filterByNameContains(characters, name);
                 List<String> names = mediaService.getNames(charactersFilter);
                 names.forEach(System.out::println);
@@ -136,13 +168,13 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names contain " + name + " and score:");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<Anime> animesFilter = mediaService.filterByNameAndScoreContains(animes, name, minScore);
                 animesFilter.forEach(a -> System.out.println(a.getDisplayName()+" -> "+a.getScore()));
             }
             case "manga" -> {
                 System.out.println("Mangas Names contain " + name + "  and score:");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<Manga> mangasFilter = mediaService.filterByNameAndScoreContains(mangas, name, minScore);
                 mangasFilter.forEach(m -> System.out.println(m.getDisplayName()+" -> "+m.getScore()));
 
@@ -161,19 +193,19 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names:");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<Anime> animesFilter = mediaService.filterByPredicate(animes,(Predicate<Anime>) predicate);
                 animesFilter.forEach(a -> System.out.println(a.getDisplayName()));
             }
             case "manga" -> {
                 System.out.println("Mangas Names:");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<Manga> mangasFilter = mediaService.filterByPredicate(mangas,(Predicate<Manga>) predicate);
                 mangasFilter.forEach(m -> System.out.println(m.getDisplayName()));
             }
             case "characters" -> {
                 System.out.println("Characters Names:");
-                List<Character> characters = apiService.getListAllItems(endpoint, page, Character.class);
+                List<Character> characters = apiService.getListAllItems(endpoint, page);
                 List<Character> charactersFilter = mediaService.filterByPredicate(characters, (Predicate<Character>) predicate);
                 charactersFilter.forEach(c -> System.out.println(c.getDisplayName()));
             }
@@ -214,13 +246,13 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 System.out.println("Animes Names:");
-                List<Anime> animes = apiService.getListAllItems(endpoint, page, Anime.class);
+                List<Anime> animes = apiService.getListAllItems(endpoint, page);
                 List<String> names = mediaService.getHighScoreNames(animes,minScore);
                 names.forEach(System.out::println);
             }
             case "manga" -> {
                 System.out.println("Mangas Names:");
-                List<Manga> mangas = apiService.getListAllItems(endpoint, page, Manga.class);
+                List<Manga> mangas = apiService.getListAllItems(endpoint, page);
                 List<String> names = mediaService.getHighScoreNames(mangas,minScore);
                 names.forEach(System.out::println);
             }
@@ -234,12 +266,12 @@ public class ApiView {
 
     public void showItemHighestScoreName(int page) throws IOException, InterruptedException {
         System.out.println("highest score Anime name:");
-        List<Anime> animes = apiService.getListAllItems("anime", page, Anime.class);
+        List<Anime> animes = apiService.getListAllItems("anime", page);
         Optional<Anime> anime = mediaService.getHighestScoreName(animes);
         anime.ifPresent(value -> System.out.println(value.getDisplayName()));
         Thread.sleep(410);
         System.out.println("highest score Manga name:");
-        List<Manga> mangas = apiService.getListAllItems("manga", page, Manga.class);
+        List<Manga> mangas = apiService.getListAllItems("manga", page);
         Optional<Manga> manga = mediaService.getHighestScoreName(mangas);
         manga.ifPresent(value -> System.out.println(value.getDisplayName()));
         Thread.sleep(410);

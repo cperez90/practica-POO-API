@@ -53,4 +53,11 @@ public class MediaService {
     public <T extends MediaContent> boolean areContentsEqual(T item,T items2) {
         return item.equals(items2);
     }
+
+    public <T extends MediaItem> T getItemByName(List<T> items, String name) {
+        if (items == null || name == null) {
+            return null;
+        }
+        return items.stream().filter(item -> item.getDisplayName().toLowerCase().contains(name.toLowerCase())).findFirst().orElse(null);
+    }
 }

@@ -4,11 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class Character extends MediaItem {
     @Getter(AccessLevel.NONE)
     private String name;

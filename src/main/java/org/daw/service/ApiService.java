@@ -29,22 +29,24 @@ public class ApiService {
         this.gson = gson;
     }
 
-    public <T extends MediaItem> ListResponse<T> getItemsListPage(String endpoint, int page, Class<T> typeClass) throws IOException, InterruptedException {
+    public <T extends MediaItem> ListResponse<T> getItemsListPage(String endpoint, int page) throws IOException, InterruptedException {
+
         URI apiURI = URI.create(BASE_URL + endpoint + "?page=" + page);
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
-        Type responseType = TypeToken.getParameterized(ListResponse.class, typeClass).getType();
+        Type responseType = TypeToken.getParameterized(ListResponse.class, typeObject(endpoint)).getType();
         return gson.fromJson(response.body(), responseType);
     }
 
-    public <T extends MediaItem> List<T> getListAllItems(String endpoint, int maxPage , Class<T> typeClass) throws IOException, InterruptedException {
+    public <T extends MediaItem> List<T> getListAllItems(String endpoint, int maxPage) throws IOException, InterruptedException {
         List<T> items = new ArrayList<>();
         int page = 1;
         boolean hasNextPage = true;
 
         while (hasNextPage) {
-            ListResponse<T> response = getItemsListPage(endpoint,page, typeClass);
+
+            ListResponse<T> response = getItemsListPage(endpoint,page);
             items.addAll(response.getData());
             if (page == maxPage) {
                 break;
@@ -56,24 +58,13 @@ public class ApiService {
         return items;
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends MediaItem> T getByItemId(String endpoint, int id) throws InterruptedException, IOException {
         URI apiURI = URI.create(BASE_URL + endpoint.toLowerCase() + "/" + id + "/full");
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
-        Class<T> typeClass;
-        if ("anime".equalsIgnoreCase(endpoint)) {
-            typeClass = (Class<T>) Anime.class;
-        } else if ("manga".equalsIgnoreCase(endpoint)) {
-            typeClass = (Class<T>) Manga.class;
-        } else if ("characters".equalsIgnoreCase(endpoint)) {
-            typeClass = (Class<T>) Character.class;
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
         String body = response.body();
-        Type responseType = TypeToken.getParameterized(SingleResponse.class, typeClass).getType();
+        Type responseType = TypeToken.getParameterized(SingleResponse.class, typeObject(endpoint)).getType();
         SingleResponse<T> singleResponse = gson.fromJson(body, responseType);
         return singleResponse.getData();
     }
@@ -93,6 +84,19 @@ public class ApiService {
     private void ensureSuccess(HttpResponse<?> response, String url) {
         if (response.statusCode() >= 400) {
             throw new RuntimeException("La llamada " + url + " ha fallado con el código " + response.statusCode());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends MediaItem> Class<T> typeObject(String endpoint) {
+        if ("anime".equalsIgnoreCase(endpoint)) {
+            return (Class<T>) Anime.class;
+        } else if ("manga".equalsIgnoreCase(endpoint)) {
+            return (Class<T>) Manga.class;
+        } else if ("characters".equalsIgnoreCase(endpoint)) {
+            return (Class<T>) Character.class;
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
     }
 }

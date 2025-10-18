@@ -11,6 +11,10 @@ public class Main {
 
         ApiView apiView = new ApiView();
         ApiService apiService = new ApiService();
+
+        apiView.showItem("characters",6,"Naruto");
+
+        /*
         //System.out.println("Lista de nombres:");
         //Los parámetros el primero para elegir la lista de entre anime, manga y personajes, y segundo para el limite de paginas para sacar los datos
         //Los endpoint pueden ser todo anime, manga o characters
@@ -60,5 +64,6 @@ public class Main {
         Thread.sleep(410);
         MediaContent item2 = apiService.getByItemId("manga",11);
         apiView.ShowComparison(item1,item2);
+        */
     }
 }
