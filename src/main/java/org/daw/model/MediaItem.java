@@ -22,13 +22,22 @@ public abstract class MediaItem implements Comparable<MediaItem> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MediaItem)) return false;
-        MediaItem mediaItem = (MediaItem) o;
-        return malId == mediaItem.malId;
+        if (!(o instanceof MediaItem other)) return false;
+        if (malId != other.malId) return false;
+        String nameThis = this.getDisplayName();
+        String nameOther = other.getDisplayName();
+
+        if (nameThis == null && nameOther == null) return true;
+        if (nameThis == null || nameOther == null) return false;
+
+        return nameThis.equalsIgnoreCase(nameOther);
     }
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(malId);
+        int result = Integer.hashCode(malId);
+        String name = getDisplayName();
+        result = 31 * result + (name == null ? 0 : name.toLowerCase().hashCode());
+        return result;
     }
 }

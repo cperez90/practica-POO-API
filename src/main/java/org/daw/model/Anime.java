@@ -1,10 +1,7 @@
 package org.daw.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

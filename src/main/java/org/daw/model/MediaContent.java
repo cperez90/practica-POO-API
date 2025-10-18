@@ -43,4 +43,29 @@ public class MediaContent extends MediaItem{
             return this.genres.getFirst().getType().compareTo(other.genres.getFirst().getType());
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MediaContent other)) return false;
+        if (malId != other.malId) return false;
+        if (type == null) {
+            if (other.type != null) return false;
+        } else if (!type.equalsIgnoreCase(other.type)) {
+            return false;
+        }
+        if (getDisplayName() == null) {
+            return other.getDisplayName() == null;
+        } else {
+            return getDisplayName().equalsIgnoreCase(other.getDisplayName());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Integer.hashCode(malId);
+        result = 31 * result + (type == null ? 0 : type.toLowerCase().hashCode());
+        result = 31 * result + (getDisplayName() == null ? 0 : getDisplayName().toLowerCase().hashCode());
+        return result;
+    }
 }

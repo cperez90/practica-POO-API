@@ -49,4 +49,8 @@ public class MediaService {
     public <T extends MediaContent> Optional<T> getHighestScoreName(List<T> items) {
         return items.stream().max(Comparator.comparingDouble(T::getScore));
     }
+
+    public <T extends MediaContent> boolean areContentsEqual(T item,T items2) {
+        return item.equals(items2);
+    }
 }

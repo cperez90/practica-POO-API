@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.daw.model.*;
+import org.daw.model.Character;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -55,12 +56,22 @@ public class ApiService {
         return items;
     }
 
-    public <T extends MediaItem> T getByItemId(String endpoint, int id, Class<T> typeClass) throws InterruptedException, IOException {
-        URI apiURI = URI.create(BASE_URL + endpoint + "/" + id + "/full");
+    @SuppressWarnings("unchecked")
+    public <T extends MediaItem> T getByItemId(String endpoint, int id) throws InterruptedException, IOException {
+        URI apiURI = URI.create(BASE_URL + endpoint.toLowerCase() + "/" + id + "/full");
         HttpRequest request = HttpRequest.newBuilder(apiURI).GET().build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         ensureSuccess(response, apiURI.toString());
-
+        Class<T> typeClass = null;
+        if ("anime".equalsIgnoreCase(endpoint)) {
+            typeClass = (Class<T>) Anime.class;
+        } else if ("manga".equalsIgnoreCase(endpoint)) {
+            typeClass = (Class<T>) Manga.class;
+        } else if ("characters".equalsIgnoreCase(endpoint)) {
+            typeClass = (Class<T>) Character.class;
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
         String body = response.body();
         Type responseType = TypeToken.getParameterized(SingleResponse.class, typeClass).getType();
         SingleResponse<T> singleResponse = gson.fromJson(body, responseType);

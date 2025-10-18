@@ -41,6 +41,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
@@ -69,6 +70,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(610);
@@ -91,6 +93,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
@@ -122,6 +125,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(610);
@@ -145,6 +149,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
@@ -172,6 +177,7 @@ public class ApiView {
                 charactersFilter.forEach(c -> System.out.println(c.getDisplayName()));
             }
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(610);
@@ -181,7 +187,7 @@ public class ApiView {
         switch (endpoint.toLowerCase()) {
             case "anime" -> {
                 List<CharacterItems> characters = apiService.getCharactersByItemId(endpoint,id);
-                Anime name = apiService.getByItemId(endpoint,id,Anime.class);
+                Anime name = apiService.getByItemId(endpoint,id);
                 System.out.println("Anime -> " + name.getDisplayName());
                 System.out.println("Characters: ");
                 characters.forEach(c -> System.out.println(c.getCharacter().getDisplayName()));
@@ -189,13 +195,14 @@ public class ApiView {
             case "manga" -> {
 
                 List<CharacterItems> characters = apiService.getCharactersByItemId(endpoint,id);
-                Manga name = apiService.getByItemId(endpoint,id,Manga.class);
+                Manga name = apiService.getByItemId(endpoint,id);
                 System.out.println("Manga -> " + name.getDisplayName());
                 System.out.println("Characters: ");
                 characters.forEach(c -> System.out.println(c.getCharacter().getDisplayName()));
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
@@ -218,6 +225,7 @@ public class ApiView {
             }
             default -> System.out.println("Unknown endpoint: " + endpoint);
         }
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(610);
@@ -233,6 +241,19 @@ public class ApiView {
         List<Manga> mangas = apiService.getListAllItems("manga", page, Manga.class);
         Optional<Manga> manga = mediaService.getHighestScoreName(mangas);
         manga.ifPresent(value -> System.out.println(value.getDisplayName()));
+        Thread.sleep(310);
+        System.out.println("----------------------------------------------------");
+        System.out.println("----------------------------------------------------");
+        Thread.sleep(710);
+    }
+
+    public <T extends MediaContent> void ShowComparison(T item1,T item2) throws  IOException, InterruptedException {
+        boolean equal = mediaService.areContentsEqual(item1,item2);
+        System.out.println("Comparing:");
+        System.out.println("Item 1: Name ->" + item1.getDisplayName() + " tipe -> " + item1.getType());
+        System.out.println("Item 2: Name ->" + item2.getDisplayName() + " tipe -> " + item2.getType());
+        System.out.println("Are contents equal? " + equal);
+
         System.out.println("----------------------------------------------------");
         System.out.println("----------------------------------------------------");
         Thread.sleep(710);
